@@ -20,7 +20,7 @@ if "latest_rag" in st.session_state:
         st.write(st.session_state.latest_rag)
 
 if "rag_app" not in st.session_state:
-    rag_app = RagApp(os.environ["DB_NAME"], "http://localhost:5000/v1")
+    rag_app = RagApp(os.environ["DB_NAME"], os.environ["OPENAI_BASE_URL"])
     st.session_state["rag_app"] = rag_app
 else:
     rag_app = st.session_state["rag_app"]
