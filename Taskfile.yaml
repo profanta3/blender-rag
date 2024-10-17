@@ -1,0 +1,22 @@
+version: "3"
+
+env:
+  DB_NAME: my_table_two
+  OLLAMA_HOST: 0.0.0.0
+
+tasks:
+  install:
+    cmds:
+      - uv sync
+
+  fill-db:
+    cmds:
+      - uv run load_wiki_data.py
+
+  chat:
+    cmds:
+      - uv run main.py
+
+  ui:
+    cmds:
+      - streamlit run app.py

@@ -1,0 +1,21 @@
+[project]
+name = "gym"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "aphrodite-engine>=0.6.2.post1",
+    "huggingface-hub[cli]>=0.25.2",
+    "lancedb>=0.14.0",
+    "loguru>=0.7.2",
+    "numpy>=1.26.3",
+    "openai>=1.51.2",
+    "pandas>=2.2.3",
+    "sentence-transformers>=3.2.0",
+    "setuptools>=75.2.0",
+    "streamlit>=1.39.0",
+    "tantivy>=0.22.0",
+    "toml>=0.10.2",
+    "wikipedia-api>=0.7.1",
+]
