@@ -1,3 +1,4 @@
+import os
 import time
 from models import Document, Prompt
 import lancedb
@@ -53,7 +54,7 @@ class RagApp:
                 ),
                 dict(role="user", content=query),
             ],
-            model="Qwen_Qwen2.5-1.5B-Instruct",
+            model=os.environ["MODEL"],
             max_tokens=250,
             stream=True,
         )

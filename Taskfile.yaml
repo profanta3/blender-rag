@@ -4,6 +4,7 @@ env:
   DB_NAME: my_table_two
   OLLAMA_HOST: 0.0.0.0
   OPENAI_BASE_URL: http://localhost:5000/v1
+  MODEL: Qwen_Qwen2.5-1.5B-Instruct
 
 tasks:
   default:
