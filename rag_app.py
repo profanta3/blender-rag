@@ -41,7 +41,7 @@ class RagApp:
         This function will search the database for the query and then start the chat completion woith the retrieved document.
         """
 
-        dense_result = self.db_search(query)
+        dense_result = self.db_search(query)[0]
 
         log.info("Starting chat completion")
         resp = self.client.chat.completions.create(
@@ -61,8 +61,9 @@ class RagApp:
 
         return resp, dense_result
 
-    def db_search(self, query: str):
+    def db_search(self, query: str, limit: int = 10) -> list[Document]:
         log.info("Vector Search start")
-        result = self.tbl.search(query, query_type="hybrid").limit(1).to_list()[0]
+        results = self.tbl.search(query, query_type="hybrid").limit(limit).to_list()
 
-        return Document.model_validate(result)
+        doc_list = [Document.model_validate(r) for r in results]
+        return doc_list
