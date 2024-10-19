@@ -45,12 +45,16 @@ task ui
 
 ## Project Structure
 
-- `app.py`: Main application file for the Streamlit UI.
-- `data/`: Directory containing the Blender manual and other data.
+- `app.py`: Main application entrypoint for streamlit.
+- `data/`: Directory for Blender manual and lancedb data.
 - `docs/`: Documentation and media files.
 - `rag_app.py`: Core logic for the RAG tool.
-- `Taskfile.yaml`: Task definitions for go-task.
+- `Taskfile.yaml`: Task definitions for for development workflows.
 - `prompts.toml`: Contains the prompt templates used by the RAG tool.
+- `routes/`: Contains the route files for different pages.
+  - `chat.py`: Chat page route.
+  - `prompt.py`: Prompt page route.
+  - `retrieval.py`: Retrieval page route.
 
 ## Environment Variables
 
