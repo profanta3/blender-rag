@@ -9,11 +9,8 @@ import pandas as pd
 
 st.title("Latest retrieval result")
 
-if "rag_app" not in st.session_state:
-    rag_app = RagApp(os.environ["DB_NAME"], os.environ["OPENAI_BASE_URL"])
-    st.session_state["rag_app"] = rag_app
-else:
-    rag_app = st.session_state["rag_app"]
+
+rag_app = st.session_state["rag_app"]
 
 
 if query := st.chat_input("Perform a DB search"):
@@ -21,14 +18,17 @@ if query := st.chat_input("Perform a DB search"):
     st.session_state["latest_rag"] = results[0].text
     st.session_state["retrieval_results"] = results
 
-tab1, tab2 = st.tabs(["Retrieved Text", "PCA plot"])
+tab1, prompt_tab, tab2 = st.tabs(["Retrieved Text", "View Prompt", "PCA plot"])
 
 if "latest_rag" in st.session_state:
     with tab1:
         st.markdown(st.session_state.latest_rag)
+else:
+    with tab1:
+        st.markdown("Please enter a query below to see the retrieval results.")
 
 # add pca plot for 10 search results
-if "retrieval_results" in st.session_state:
+if "retrieval_results" in st.session_state and query:
     with tab2:
         st.write(
             ":red[Red Dots] are stored db embeddings, the :blue[blue dot] is the used doc for text gen. And :white[white dot] is the input query."
@@ -49,3 +49,11 @@ if "retrieval_results" in st.session_state:
 else:
     with tab2:
         st.markdown("Please enter a query below to see the PCA plot.")
+
+with prompt_tab:
+    prompt = rag_app.get_latest_prompt()
+    if prompt:
+        st.write("Prompt: ")
+        st.write(rag_app.get_latest_prompt())
+    else:
+        st.write("No prompt available - please enter a query to generate a prompt.")

@@ -5,11 +5,8 @@ from rag_app import RagApp
 
 st.title("Edit Prompt template")
 
-if "rag_app" not in st.session_state:
-    rag_app = RagApp(os.environ["DB_NAME"], os.environ["OPENAI_BASE_URL"])
-    st.session_state["rag_app"] = rag_app
-else:
-    rag_app = st.session_state["rag_app"]
+
+rag_app = st.session_state["rag_app"]
 
 txt = st.text_area(
     label="Prompt Template",

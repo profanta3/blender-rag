@@ -3,15 +3,14 @@ import streamlit as st
 
 from rag_app import RagApp
 
-# Initialize chat history
-if "messages" not in st.session_state:
-    st.session_state.messages = []
 
 header_col, btn_col = st.columns([4, 1], vertical_alignment="bottom")
 
 header_col.title("Chat now with WikiRAG")
-if btn_col.button(":red[Clear History]"):
-    st.session_state.messages = []
+
+if st.session_state.messages:
+    if btn_col.button(":red[Clear History]"):
+        st.session_state.messages = []
 
 # Display chat messages from history on app rerun
 for message in st.session_state.messages:
@@ -19,11 +18,7 @@ for message in st.session_state.messages:
         st.markdown(message["content"])
 
 
-if "rag_app" not in st.session_state:
-    rag_app = RagApp(os.environ["DB_NAME"], os.environ["OPENAI_BASE_URL"])
-    st.session_state["rag_app"] = rag_app
-else:
-    rag_app = st.session_state["rag_app"]
+rag_app = st.session_state["rag_app"]
 
 
 if prompt := st.chat_input("What is up?"):
