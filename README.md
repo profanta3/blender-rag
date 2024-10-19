@@ -55,6 +55,7 @@ task ui
   - `chat.py`: Chat page route.
   - `prompt.py`: Prompt page route.
   - `retrieval.py`: Retrieval page route.
+  - `settings.py`: (WIP)
 
 ## Environment Variables
 
