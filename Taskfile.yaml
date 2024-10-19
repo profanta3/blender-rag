@@ -6,6 +6,10 @@ env:
   OPENAI_BASE_URL: http://localhost:5000/v1
 
 tasks:
+  default:
+    cmds:
+      - task --list-all
+
   install:
     cmds:
       - uv sync
