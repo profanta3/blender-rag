@@ -21,24 +21,29 @@ Before you start, ensure you have the following installed:
 
 ## How to start
 
+1. *Copy and setup `.evn`:*
+```bash
+cp .env.example .env
+```
 
-1. *Install Python environment:**
+
+2. *Install Python environment:**
 ```bash
 uv sync
 ```
 
-1. **Clone Blender manual into `data` directory:**
+3. **Clone Blender manual into `data` directory:**
 ```bash
 cd ./data
 git clone https://projects.blender.org/blender/blender-manual.git
 ```
 
-1. **Fill the vector database with task:**
+4. **Fill the vector database with task:**
 ```bash
 task db-fill
 ```
 
-1. **Start the Streamlit UI server with task:**
+5. **Start the Streamlit UI server with task:**
 ```bash
 task ui
 ```
@@ -59,7 +64,7 @@ task ui
 
 ## Environment Variables
 
-The following environment variables can be used to configure the application in `Taskfile.yaml`:
+The following environment variables can be used to configure the application in `.env`:
 
 | Variable Name     | Description                      | Example Value              |
 | ----------------- | -------------------------------- | -------------------------- |
