@@ -4,10 +4,11 @@ import lancedb
 from models import Document
 from load_wiki_data import load_data_docs
 from pprint import pprint as pp
+from logger import log
 
 
 def main():
-    print("Start")
+    log.info("Start")
     table_name = os.environ["DB_NAME"]
 
     db = lancedb.connect("./data/lance")

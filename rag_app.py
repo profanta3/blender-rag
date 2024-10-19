@@ -4,7 +4,7 @@ import lancedb
 from rich import print
 from openai import OpenAI, Stream
 import toml
-from loguru import logger
+from logger import log
 
 
 class RagApp:
@@ -27,13 +27,13 @@ class RagApp:
         return prompts
 
     def init_db(self):
-        logger.info("Setting up db")
+        log.info("Setting up db")
         t_start = time.time()
         db = lancedb.connect("./data/lance")
 
         self.tbl = db.create_table(self.table_name, schema=Document, exist_ok=True)
         t_total = time.time() - t_start
-        logger.info(f"Fnished setting up db - took {t_total:.2f} seconds")
+        log.info(f"Fnished setting up db - took {t_total:.2f} seconds")
 
     def search(self, query: str) -> tuple[Stream, Document]:
         """Main entry point for chat completion.
@@ -42,7 +42,7 @@ class RagApp:
 
         dense_result = self._db_search(query)
 
-        logger.info("Starting chat completion")
+        log.info("Starting chat completion")
         resp = self.client.chat.completions.create(
             messages=[
                 dict(
@@ -61,7 +61,7 @@ class RagApp:
         return resp, dense_result
 
     def _db_search(self, query: str):
-        logger.info("Vector Search start")
+        log.info("Vector Search start")
         result = self.tbl.search(query, query_type="hybrid").limit(1).to_list()[0]
 
         return Document.model_validate(result)

@@ -14,7 +14,7 @@ tasks:
     cmds:
       - uv sync
 
-  fill-db:
+  db-fill:
     cmds:
       - uv run load_wiki_data.py
 

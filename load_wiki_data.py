@@ -1,8 +1,10 @@
 import glob
 import os
 import lancedb
+from rich.console import Console
 
 from models import Document
+from logger import log
 
 
 def read_file_content(file: str):
@@ -10,23 +12,20 @@ def read_file_content(file: str):
         return f.read()
 
 
-def load_data_docs(data_root: str = "data/blender-manual/manual/") -> dict:
+def load_data_docs(data_root: str = "data/blender-manual/manual/") -> list:
     files = []
 
     for index, file in enumerate(glob.glob(f"{data_root}**/*.rst", recursive=True)):
         files.append(dict(text=read_file_content(file)))
 
-    print(len(files))
-    # print(files[0])
-
     return files
 
 
 if __name__ == "__main__":
-    print("Filling LanceDB")
+    log.info("Filling LanceDB")
     table_name = os.environ["DB_NAME"]
 
-    print(f"Table-Name: {table_name}")
+    log.info(f"Table-Name: {table_name}")
 
     docs = load_data_docs()
 
@@ -35,9 +34,9 @@ if __name__ == "__main__":
     db.drop_table(table_name)
 
     tbl = db.create_table(table_name, schema=Document, exist_ok=True)
-
-    print(f"Adding {len(docs)}-docs to table")
-    tbl.add(docs)
+    console = Console()
+    with console.status(f"Adding {len(docs)} docs to db") as status:
+        tbl.add(docs)
 
     tbl.create_fts_index("text")
-    print("Done.")
+    log.info("Done.")
