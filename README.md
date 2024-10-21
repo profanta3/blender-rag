@@ -8,6 +8,7 @@ Before you start, ensure you have the following installed:
 
 - go-task (https://github.com/go-task/task)
 - uv (https://github.com/astral-sh/uv).
+- ollama (might change in the future - for now embedder is used from ollama)
 - custom openai endpoint with served model -- example tools (you can also use your own openai key - take a look into `rag_app.py` for more):
   - https://github.com/oobabooga/text-generation-webui
   - https://ollama.com/
