@@ -5,6 +5,7 @@ import lancedb
 from openai import OpenAI, Stream
 import toml
 from logger import log
+from lancedb.rerankers import RRFReranker
 
 
 class RagApp:
@@ -23,6 +24,7 @@ class RagApp:
         self.prompt = self._load_prompt_from_toml(prompt_path)[0]
         self.model = os.environ["MODEL"]
         self.latest_prompt = ""
+        self.reranker = RRFReranker()
 
     def _load_prompt_from_toml(self, file: str) -> list[Prompt]:
         prompts = []
@@ -94,7 +96,13 @@ class RagApp:
 
     def db_search(self, query: str, limit: int = 10) -> list[Document]:
         log.info("Vector Search start")
-        results = self.tbl.search(query, query_type="hybrid").limit(limit).to_list()
+
+        results = (
+            self.tbl.search(query, query_type="hybrid")
+            .limit(limit)
+            .rerank(self.reranker)
+            .to_list()
+        )
 
         doc_list = [Document.model_validate(r) for r in results]
         return doc_list
