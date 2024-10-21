@@ -14,9 +14,12 @@ rag_app = st.session_state["rag_app"]
 
 
 if query := st.chat_input("Perform a DB search"):
+    st.session_state.query = query
     results = rag_app.db_search(query, limit=500)
     st.session_state["latest_rag"] = results[0].text
     st.session_state["retrieval_results"] = results
+if "query" in st.session_state:
+    st.markdown(f"Querry: `{st.session_state.query}`")
 
 tab1, prompt_tab, tab2 = st.tabs(["Retrieved Text", "View Prompt", "PCA plot"])
 
@@ -43,9 +46,12 @@ if "retrieval_results" in st.session_state and query:
 
         # Add a column for color
         df["color"] = ["#FF0000"] + ["#FFFFFF"] + ["#0000FF"] * (len(df) - 2)
+        df["size"] = [5] + [5] + [1] * (len(df) - 2)
 
         # Plot the scatter chart
-        st.scatter_chart(df, x="PC1", y="PC2", color="color", use_container_width=True)
+        st.scatter_chart(
+            df, x="PC1", y="PC2", color="color", size="size", use_container_width=True
+        )
 else:
     with tab2:
         st.markdown("Please enter a query below to see the PCA plot.")
