@@ -54,6 +54,9 @@ class RagApp:
     def set_model(self, model: str):
         self.model = model
 
+    def get_model(self) -> str:
+        return self.model
+
     def get_available_models(self) -> list:
         return self.client.models.list()
 

@@ -6,8 +6,6 @@ from rag_app import RagApp
 
 header_col, btn_col = st.columns([4, 1], vertical_alignment="bottom")
 
-header_col.title("Chat now with WikiRAG")
-
 if st.session_state.messages:
     if btn_col.button(":red[Clear History]"):
         st.session_state.messages = []
@@ -17,8 +15,10 @@ for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-
 rag_app = st.session_state["rag_app"]
+
+
+header_col.title("Chat now with WikiRAG", help=f"Model: {rag_app.get_model()}")
 
 
 if prompt := st.chat_input("What is up?"):
