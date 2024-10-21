@@ -31,7 +31,8 @@ if __name__ == "__main__":
 
     db = lancedb.connect("./data/lance")
 
-    db.drop_table(table_name)
+    if table_name in db.table_names():
+        db.drop_table(table_name)
 
     tbl = db.create_table(table_name, schema=Document, exist_ok=True)
     console = Console()
