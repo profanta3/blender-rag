@@ -12,54 +12,68 @@ st.title("Latest retrieval result")
 
 rag_app = st.session_state["rag_app"]
 
+query = st.chat_input("Perform a DB search") or st.session_state.get("query")
 
-if query := st.chat_input("Perform a DB search"):
+if query:
     st.session_state.query = query
     results = rag_app.db_search(query, limit=500)
     st.session_state["latest_rag"] = results[0].text
     st.session_state["retrieval_results"] = results
-if "query" in st.session_state:
-    st.markdown(f"Querry: `{st.session_state.query}`")
 
-tab1, prompt_tab, tab2 = st.tabs(["Retrieved Text", "View Prompt", "PCA plot"])
+if "query" in st.session_state:
+    with st.chat_message("user"):
+        st.write(st.session_state.query)
+
+tab1, prompt_tab, tab2 = st.tabs(["Retrieved Document", "Generated Prompt", "PCA plot"])
 
 if "latest_rag" in st.session_state:
     with tab1:
-        st.markdown(st.session_state.latest_rag)
+        st.code(st.session_state.latest_rag, language="markdown")
 else:
     with tab1:
         st.markdown("Please enter a query below to see the retrieval results.")
 
+
+def plot_pca():
+    st.write(
+        ":red[Red Dots] are stored db embeddings, the :blue[blue dot] is the used doc for text gen. And :white[white dot] is the input query."
+    )
+    vectors = [result.vector for result in st.session_state.retrieval_results]
+
+    query_emb = model.generate_embeddings([query])
+    pca_data = pca(query_emb + vectors)
+
+    # Create a DataFrame for the PCA data
+    df = pd.DataFrame(pca_data, columns=["PC1", "PC2"])
+
+    # Add a column for color
+    df["color"] = ["#FF0000"] + ["#FFFFFF"] + ["#0000FF"] * (len(df) - 2)
+    df["size"] = [5] + [5] + [1] * (len(df) - 2)
+
+    # Plot the scatter chart
+    st.scatter_chart(
+        df, x="PC1", y="PC2", color="color", size="size", use_container_width=True
+    )
+
+
 # add pca plot for 10 search results
 if "retrieval_results" in st.session_state and query:
     with tab2:
-        st.write(
-            ":red[Red Dots] are stored db embeddings, the :blue[blue dot] is the used doc for text gen. And :white[white dot] is the input query."
-        )
-        vectors = [result.vector for result in st.session_state.retrieval_results]
-
-        query_emb = model.generate_embeddings([query])
-        pca_data = pca(query_emb + vectors)
-
-        # Create a DataFrame for the PCA data
-        df = pd.DataFrame(pca_data, columns=["PC1", "PC2"])
-
-        # Add a column for color
-        df["color"] = ["#FF0000"] + ["#FFFFFF"] + ["#0000FF"] * (len(df) - 2)
-        df["size"] = [5] + [5] + [1] * (len(df) - 2)
-
-        # Plot the scatter chart
-        st.scatter_chart(
-            df, x="PC1", y="PC2", color="color", size="size", use_container_width=True
-        )
+        plot_pca()
 else:
     with tab2:
         st.markdown("Please enter a query below to see the PCA plot.")
+        # button for using latest query
+        if "query" in st.session_state:
+            st.write("Or use latest query as input:")
+            if st.button(f'"{st.session_state.query}"'):
+                query = st.session_state.query
+                plot_pca()
+
 
 with prompt_tab:
     prompt = rag_app.get_latest_prompt()
     if prompt:
-        st.write("Prompt: ")
-        st.write(rag_app.get_latest_prompt())
+        st.code(rag_app.get_latest_prompt(), language="markdown")
     else:
         st.write("No prompt available - please enter a query to generate a prompt.")
