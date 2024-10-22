@@ -16,7 +16,7 @@ query = st.chat_input("Perform a DB search") or st.session_state.get("query")
 
 if query:
     st.session_state.query = query
-    results = rag_app.db_search(query, limit=500)
+    results = rag_app.db_search(query, limit=st.session_state.get("num_docs", 500))
     st.session_state["latest_rag"] = results[0].text
     st.session_state["retrieval_results"] = results
 
@@ -66,6 +66,15 @@ if "retrieval_results" in st.session_state and query:
     with tab2:
         write_latest_query()
         plot_pca()
+        st.slider(
+            "Number of docs",
+            0,
+            rag_app.tbl.count_rows(),
+            500,
+            step=10,
+            key="num_docs",
+        )
+
 else:
     with tab2:
         st.markdown("Please enter a query below to see the PCA plot.")
