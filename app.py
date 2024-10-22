@@ -15,17 +15,17 @@ if "messages" not in st.session_state:
     st.session_state.messages = []
 
 # https://discuss.streamlit.io/t/how-to-right-justify-st-chat-message/46794/5
-st.markdown(
-    """
-<style>
-    .st-emotion-cache-janbn0 {
-        flex-direction: row-reverse;
-        text-align: right;
-    }
-</style>
-""",
-    unsafe_allow_html=True,
-)
+# st.markdown(
+#     """
+# <style>
+#     .st-emotion-cache-janbn0 {
+#         flex-direction: row-reverse;
+#         text-align: right;
+#     }
+# </style>
+# """,
+#     unsafe_allow_html=True,
+# )
 
 retrieval_page = st.Page("routes/retrieval.py", title="Retrieval", icon="🔍")
 prompt_page = st.Page("routes/prompt.py", title="Prompt", icon="📃")
