@@ -21,4 +21,4 @@ tasks:
 
   ui:
     cmds:
-      - streamlit run app.py --server.port $UI_PORT
+      - uv run streamlit run app.py
