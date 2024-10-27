@@ -1,6 +1,6 @@
 import os
 import time
-from models import Document, Prompt
+from models import Document, Prompt, RetreivedDocument
 import lancedb
 from openai import OpenAI, Stream
 import toml
@@ -24,7 +24,8 @@ class RagApp:
         self.prompt = self._load_prompt_from_toml(prompt_path)[0]
         self.model = os.environ["MODEL"]
         self.latest_prompt = ""
-        self.reranker = RRFReranker()
+        self.reranker = RRFReranker(return_score="all")
+        self.doc_list = []
 
     def _load_prompt_from_toml(self, file: str) -> list[Prompt]:
         prompts = []
@@ -60,6 +61,9 @@ class RagApp:
     def get_available_models(self) -> list:
         return self.client.models.list()
 
+    def get_docs(self) -> list:
+        return self.doc_list or []
+
     def init_db(self):
         log.info("Setting up db")
         t_start = time.time()
@@ -74,10 +78,17 @@ class RagApp:
         This function will search the database for the query and then start the chat completion woith the retrieved document.
         """
 
-        dense_result = self.db_search(query)[0]
+        # Get top three search results and put them into the prompt...
+        top_k = self.db_search(query, top_k=3)
+        top_k_string = "".join(
+            [
+                f"\n\nSearch result: {i}:\n{str(text.text).strip()}"
+                for i, text in enumerate(top_k)
+            ]
+        )
 
         log.info("Starting chat completion")
-        prompt = self.prompt.template.replace("__DOCS__", dense_result.text).replace(
+        prompt = self.prompt.template.replace("__DOCS__", top_k_string).replace(
             "__DATE__", "17.10.2024, 12 PM"
         )
         resp = self.client.chat.completions.create(
@@ -95,9 +106,11 @@ class RagApp:
 
         self.latest_prompt = prompt
 
-        return resp, dense_result
+        return resp, top_k
 
-    def db_search(self, query: str, limit: int = 10) -> list[Document]:
+    def db_search(
+        self, query: str, limit: int = 10, top_k: int | None = None
+    ) -> list[Document]:
         log.info("Vector Search start")
 
         results = (
@@ -107,5 +120,12 @@ class RagApp:
             .to_list()
         )
 
-        doc_list = [Document.model_validate(r) for r in results]
-        return doc_list
+        doc_list = [RetreivedDocument.model_validate(r) for r in results]
+
+        top_k = doc_list[
+            : top_k or limit
+        ]  # sorted(doc_list, key=lambda x: x.score)[: top_k or limit]
+
+        self.doc_list = top_k
+
+        return top_k

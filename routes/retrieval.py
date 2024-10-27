@@ -27,7 +27,7 @@ def write_latest_query():
             st.write(st.session_state.query)
 
 
-tab1, prompt_tab, tab2 = st.tabs(["Retrieved Document", "Generated Prompt", "PCA plot"])
+tab1, tab2 = st.tabs(["Retrieved Document", "PCA plot"])
 
 if "latest_rag" in st.session_state:
     with tab1:
@@ -84,12 +84,3 @@ else:
             if st.button(f'"{st.session_state.query}"'):
                 query = st.session_state.query
                 plot_pca()
-
-
-with prompt_tab:
-    prompt = rag_app.get_latest_prompt()
-    if prompt:
-        write_latest_query()
-        st.code(rag_app.get_latest_prompt(), language="markdown")
-    else:
-        st.write("No prompt available - please enter a query to generate a prompt.")
