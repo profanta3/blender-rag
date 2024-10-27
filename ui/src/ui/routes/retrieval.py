@@ -1,9 +1,8 @@
-import os
 import streamlit as st
 
-from models import model
+from lib.models.models import model
 
-from utils import pca
+from ui.utils import pca
 import pandas as pd
 import plotly.express as px
 
@@ -16,7 +15,10 @@ query = st.chat_input("Perform a DB search") or st.session_state.get("query")
 
 if query:
     st.session_state.query = query
-    results = rag_app.db_search(query, limit=st.session_state.get("num_docs", 500))
+    results = rag_app.db_search(
+        query,
+        limit=st.session_state.get("num_docs", 500),
+    )
     st.session_state["latest_rag"] = results[0].text
     st.session_state["retrieval_results"] = results
 

@@ -1,10 +1,10 @@
 import os
 import lancedb
 
-from models import Document
-from load_wiki_data import load_data_docs
+from lib.models.models import Document
+from ui.load_wiki_data import load_data_docs
 from pprint import pprint as pp
-from logger import log
+from lib.logger import log
 
 
 def main():

@@ -1,8 +1,7 @@
 import os
 import streamlit as st
 
-from rag_app import RagApp
-
+from ui.rag_app import RagApp
 
 if "rag_app" not in st.session_state:
     rag_app = RagApp(os.environ["DB_NAME"], os.environ["OPENAI_BASE_URL"])

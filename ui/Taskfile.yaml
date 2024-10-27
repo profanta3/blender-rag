@@ -1,0 +1,9 @@
+version: "3"
+
+# dotenv: ['.env', '{{.ENV}}/.env.', '{{.HOME}}/.env']
+
+tasks:
+
+  ui:
+    cmds:
+      - "uv run streamlit run {{.TASKFILE_DIR}}/src/ui/app.py"

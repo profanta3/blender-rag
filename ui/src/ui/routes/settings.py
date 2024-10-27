@@ -1,7 +1,6 @@
-import os
 import streamlit as st
 
-from rag_app import RagApp
+from ui.rag_app import RagApp
 
 
 rag_app: RagApp = st.session_state["rag_app"]

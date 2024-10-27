@@ -1,7 +1,6 @@
-import os
 import streamlit as st
 
-from rag_app import RagApp
+from ui.rag_app import RagApp
 
 st.title("Edit Prompt template")
 

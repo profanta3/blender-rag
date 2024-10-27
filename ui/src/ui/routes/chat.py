@@ -1,9 +1,8 @@
-import os
 import streamlit as st
-from models import Document
+from lib.models.models import Document
 
-from rag_app import RagApp
-
+from ui.rag_app import RagApp
+from ui.api.api import send_user_query
 
 header_col, btn_col = st.columns([4, 1], vertical_alignment="bottom")
 
@@ -42,7 +41,7 @@ if prompt := st.chat_input("Ask me something about blender..."):
         st.markdown(prompt)
 
     with st.chat_message("assistant"):
-        stream, docs = rag_app.search(st.session_state.query)
+        stream, docs = send_user_query(st.session_state.query)
         st.session_state.latest_rag = docs
 
         response = st.write_stream(stream)

@@ -3,8 +3,8 @@ import os
 import lancedb
 from rich.console import Console
 
-from models import Document
-from logger import log
+from lib.models.models import Document
+from lib.logger import log
 
 
 def read_file_content(file: str):

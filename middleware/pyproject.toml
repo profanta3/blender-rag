@@ -1,0 +1,19 @@
+[project]
+name = "middleware"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "profanta", email = "me@profanta" }
+]
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi>=0.115.2",
+]
+
+[project.scripts]
+middleware = "middleware.app:serve"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

@@ -1,0 +1,9 @@
+version: "3"
+
+# dotenv: ['.env', '{{.ENV}}/.env.', '{{.HOME}}/.env']
+
+tasks:
+
+  dev:
+    cmds:
+      - "uv run uvicorn middleware.app:app --reload"

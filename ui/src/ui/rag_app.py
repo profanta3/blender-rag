@@ -1,10 +1,10 @@
 import os
 import time
-from models import Document, Prompt, RetreivedDocument
+from lib.models.models import Document, Prompt, RetreivedDocument
 import lancedb
 from openai import OpenAI, Stream
 import toml
-from logger import log
+from lib.logger import log
 from lancedb.rerankers import RRFReranker
 
 

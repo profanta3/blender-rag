@@ -2,6 +2,10 @@ version: "3"
 
 dotenv: ['.env', '{{.ENV}}/.env.', '{{.HOME}}/.env']
 
+includes:
+  ui: ./ui
+  mw: ./middleware
+
 tasks:
   default:
     cmds:
@@ -18,7 +22,12 @@ tasks:
   chat:
     cmds:
       - uv run main.py
-
-  ui:
+  
+  dev:
     cmds:
-      - uv run streamlit run app.py
+      - task ui:ui &
+      - task mw:dev
+
+  #ui:
+    #cmds:
+      #- uv run streamlit run app.py

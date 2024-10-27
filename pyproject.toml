@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
     "aphrodite-engine>=0.6.2.post1",
+    "fastapi[all]>=0.115.2",
     "huggingface-hub[cli]>=0.25.2",
     "lancedb>=0.14.0",
     "loguru>=0.7.2",
@@ -22,4 +23,15 @@ dependencies = [
     "tantivy>=0.22.0",
     "toml>=0.10.2",
     "wikipedia-api>=0.7.1",
+    "middleware",
+    "ui",
+    "lib",
 ]
+
+[tool.uv.sources]
+middleware = { workspace = true }
+ui = { workspace = true }
+lib = { workspace = true }
+
+[tool.uv.workspace]
+members = ["middleware", "ui", "lib"]
